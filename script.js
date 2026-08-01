@@ -1,24 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const cards = document.querySelectorAll('.card, .division-card, .grade-card, .gallery-item');
+  const loader = document.getElementById('pageLoader');
+  if (loader) {
+    setTimeout(() => loader.classList.add('hidden'), 650);
+  }
 
-  const reveal = (entries, observer) => {
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
         observer.unobserve(entry.target);
       }
     });
-  };
+  }, { threshold: 0.12 });
 
-  const observer = new IntersectionObserver(reveal, { threshold: 0.1 });
-  cards.forEach((card) => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(18px)';
-    card.style.transition = 'opacity 600ms ease, transform 600ms ease';
-    observer.observe(card);
-  });
-
-  const style = document.createElement('style');
-  style.innerHTML = `.visible { opacity: 1 !important; transform: translateY(0) !important; }`;
-  document.head.appendChild(style);
+  reveals.forEach((item) => observer.observe(item));
 });
